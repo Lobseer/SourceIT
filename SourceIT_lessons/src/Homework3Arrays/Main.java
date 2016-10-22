@@ -23,7 +23,8 @@ public class Main {
             System.out.println("2.Print revert array");
             System.out.println("3.Print random jagged array");
             System.out.println("4.Print Fibobacci series");
-            System.out.println("5.Exit");
+            System.out.println("5.Amount of lucky tickets");
+            System.out.println("6.Exit");
             choise = read.readLine();
             switch (choise) {
                 case "1":
@@ -49,7 +50,7 @@ public class Main {
                     System.out.println("Fibobacci Series:\n"+Arrays.toString(fibonacciSeries));
                     break;
                 case "5":
-
+                    System.out.println("Amount of lucky tickets: "+countLuckTickets(6));
                     break;
                 default:
                     System.out.println("Input error");
@@ -57,23 +58,21 @@ public class Main {
         } while (choise != "6");
     }
 
-    public static int countLuckTickets() {
+    public static int countLuckTickets(int length) {
         int count=0;
-        int [] tiket = new int[6];
-        int i,j,k;
-        for(i=0;i<10;i++) {
-
+        int sum;
+        int[] ticket = new int[length/2 * 9+1];
+        for (int j = 0; j < 1000; j++) {
+            sum=0;
+            for (int k = j; k >= 1; k /= 10) {
+                sum += k % 10;
+            }
+            ticket[sum]++;
+        }
+        for(int i=0;i<ticket.length;i++) {
+            count+=ticket[i]*ticket[i];
         }
         return count;
-//        Ясно дело
-//        Пусть есть массив a[28]
-//        При этом каждый a[i]= кол-во таким трехзначных чисел от 0 до 999, сумма цифр которых равна i
-//        Очевидно что минимальное i - это 0,
-//                максимальное i - это 27.
-//        Посчитать массив a[28] нетрудно - 1001 цикл
-//
-//        Ответ всей задачи q равен сумме квадратов массива a[]
-//        Тоже нетрудно посчитать
     }
 
     public static int[] getFibonacciSeries(int length) {
