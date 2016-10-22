@@ -3,7 +3,6 @@ package Homework3Arrays;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -14,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String choise;
         BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-        Random rnd = new Random();
+        //Random rnd = new Random();
         int[] array;
         do {
             System.out.println();
