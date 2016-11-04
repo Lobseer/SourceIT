@@ -3,6 +3,8 @@ package Lesson6Game;
 import Lesson6Game.model.Card;
 import Lesson6Game.model.Game;
 import Lesson6Game.model.Player;
+import Lesson6Game.model.impl.GameService;
+import Lesson6Game.model.impl.PlayerImpl;
 
 public class Main {
 
@@ -23,9 +25,9 @@ public class Main {
             allCards[index++] = newCard(Card.Type.UNCOMMON, 11, subType);
         }
 
-        Game game = null;
-        Player player1 = null;
-        Player player2 = null;
+        Game game = new GameService();
+        Player player1 = new PlayerImpl("p1");
+        Player player2 = new PlayerImpl("p2");;
 
         game.setDeck(allCards);
         game.setPlayer(player1, 0);
@@ -33,9 +35,10 @@ public class Main {
 
         game.dealCards();
 
-        while(game.getDeck().length > 0) {
+        while(game.hasNextCard()) {
             Player currentPlayer = game.getNextPlayer();
             Card card = currentPlayer.getRandomCard();
+            if(card == null) break;
             System.out.println("Player " + currentPlayer + " is playing card " + card);
             game.currentPlayerPlaysCard(card);
             currentPlayer.addCard(game.getNextCard());
@@ -60,6 +63,11 @@ public class Main {
             @Override
             public SubType getSubType() {
                 return subType;
+            }
+
+            @Override
+            public String toString() {
+                return "{" + type+", "+subType+","+value+"}";
             }
         };
     }

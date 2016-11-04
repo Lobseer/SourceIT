@@ -4,12 +4,12 @@ package Homework8Racing;
  * Created by lobseer on 02.11.2016.
  */
 abstract class Car {
-    private String brand;
-    private float weight;
-    private int wheelsAmount;
-    private float drivePower;
-    private float nowSpeed;
-    private float maxSpeed;
+    protected String brand;
+    protected float weight;
+    protected int wheelsAmount;
+    protected float drivePower;
+    protected float nowSpeed;
+    protected float maxSpeed;
     protected float tankSize;
 
     public Car(String brand, float weight, int wheelsAmount, float drivePower, float maxSpeed, float tankSize) {
@@ -21,8 +21,27 @@ abstract class Car {
         this.tankSize = tankSize;
     }
 
-    protected void Move() {
+    private void setNowSpeed() {
+        if (nowSpeed<=maxSpeed){
+            nowSpeed+=drivePower-weight/10; //все расчеты сам придумал так как не разбираюсь)
+        }
+    }
+
+    public void Move() {
+        setNowSpeed();
         System.out.println("Move with speed= "+nowSpeed+"\n");
     }
 
+    @Override
+    public String toString() {
+        return "Car{" +
+                "brand='" + brand + '\'' +
+                ", weight=" + weight +
+                ", wheelsAmount=" + wheelsAmount +
+                ", drivePower=" + drivePower +
+                ", nowSpeed=" + nowSpeed +
+                ", maxSpeed=" + maxSpeed +
+                ", tankSize=" + tankSize +
+                "}\n";
+    }
 }

@@ -15,4 +15,5 @@ public interface Game {
     int getPlayersScore(int palyerNumber);
     int getPlayersScore(Player player);
     void dealCards();
+    boolean hasNextCard();
 }

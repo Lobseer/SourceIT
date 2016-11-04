@@ -5,8 +5,8 @@ package Homework8Racing;
  */
 public class Truck extends Car {
     private Car[] insideCars;
-    private int carsAmount=0;
-    private int maxCarsAmount;
+    protected int carsAmount=0;
+    protected int maxCarsAmount;
 
     public Truck(String brand, float weight, int wheelsAmount, float drivePower, float maxSpeed, float tankSize, int maxCarsAmount) {
         super(brand, weight, wheelsAmount, drivePower, maxSpeed, tankSize);
@@ -14,8 +14,11 @@ public class Truck extends Car {
         insideCars = new Car[maxCarsAmount];
     }
 
-    protected void putCar(Car car) {
-        if(carsAmount<maxCarsAmount)
+    public void putCar(Car car) {
+        if(carsAmount<maxCarsAmount) {
             insideCars[carsAmount++]=car;
+        } else {
+            System.out.println("not space enough\n");
+        }
     }
 }
