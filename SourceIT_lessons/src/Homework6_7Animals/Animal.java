@@ -8,10 +8,12 @@ public abstract class Animal {
     public String getName() {
         return name;
     }
+
     protected boolean sex; //true - male; false - female
     public boolean isSex() {
         return sex;
     }
+
     protected int age;
     public int getAge() {
         return age;
@@ -19,6 +21,7 @@ public abstract class Animal {
     public void setAge(int age) {
         this.age = age;
     }
+
     protected float speed;
     public float getSpeed() {
         return speed;
@@ -26,6 +29,7 @@ public abstract class Animal {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
+
     protected float weight;
     public float getWeight() {
         return weight;
@@ -33,6 +37,7 @@ public abstract class Animal {
     public void setWeight(float weight) {
         this.weight = weight;
     }
+
     public float getStrength() {
         return weight*speed;
     }

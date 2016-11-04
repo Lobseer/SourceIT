@@ -5,8 +5,25 @@ package Homework6_7Animals;
  */
 public class Predator extends Animal {
     protected boolean nightVision;
+    public boolean isNightVision() {
+        return nightVision;
+    }
+
     protected float clawsLength;
+    public float getClawsLength() {
+        return clawsLength;
+    }
+    public void setClawsLength(float clawsLength) {
+        this.clawsLength = clawsLength;
+    }
+
     protected int toothAmount;
+    public int getToothAmount() {
+        return toothAmount;
+    }
+    public void setToothAmount(int toothAmount) {
+        this.toothAmount = toothAmount;
+    }
 
     @Override
     public float getStrength() {
@@ -26,6 +43,6 @@ public class Predator extends Animal {
     }
 
     public void eat(Herbivore animal) {
-        System.out.println("Eat "+ animal.getName());
+        System.out.println("Eat "+ animal.getName()+"\n");
     }
 }
