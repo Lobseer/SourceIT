@@ -11,6 +11,13 @@ import Lesson6.repelent.Repelent;
  */
 public class Main {
     public static void main(String[] args) {
+        /*
+        класс
+        <modificator> class ClassName [<T [extends/implements ClassName1]>]
+        метод
+        <modificator> [<T>] <return type> methodName([prams])
+         */
+
         Repelent<Fly> repelent = new RaidFromFlies();
 
         RaidFromFlies repelent2 = new RaidFromFlies();

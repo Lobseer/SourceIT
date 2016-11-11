@@ -6,6 +6,6 @@ package Homework8Racing;
 public class Main {
     public static void main(String[] args) {
         RacingCar rc = new RacingCar("bmw",190,4,266,312,40,true);
-        rc.
+
     }
 }

@@ -1,8 +1,8 @@
 package Lesson6Game.model.impl;
 
-import Lesson6Game.model.Card;
-import Lesson6Game.model.Game;
-import Lesson6Game.model.Player;
+import Lesson6Game.model.*;
+
+import java.util.Random;
 
 /**
  * Created by denis.selutin on 04.11.2016.
@@ -17,36 +17,69 @@ public class GameService implements Game {
 
 
     public boolean hasNextCard() {
-        return size >= 0;
+        return size > 0;
     }
 
     @Override
     public boolean currentPlayerPlaysCard(Card card) {
-        if(lastCard == null) {
-            lastCard = card;
-        } else {
+        if(lastCard != null) {
             if(lastCard.getValue() < card.getValue()) {
                 playerScore[currentPlayerNumber]++;
             } else {
                 playerScore[currentPlayerNumber]--;
             }
             lastCard = null;
+        } else {
+            lastCard = card;
         }
         return false;
     }
 
     @Override
     public boolean currentPlayerPlaysCard(int cardNumberInThePalyersHand) {
+        if(lastCard != null) {
+            if(lastCard.getValue() < players[currentPlayerNumber].getCard(cardNumberInThePalyersHand).getValue()) {
+                playerScore[currentPlayerNumber]++;
+            } else {
+                playerScore[currentPlayerNumber]--;
+            }
+            lastCard = null;
+        } else {
+            lastCard = players[currentPlayerNumber].getCard(cardNumberInThePalyersHand);
+        }
         return false;
     }
 
     @Override
     public boolean currentPlayerPlaysRandomCard() {
+        Random rnd = new Random();
+        int choiseCard = rnd.nextInt(Game.HAND_MAX_SIZE);
+        if(lastCard != null) {
+            if(lastCard.getValue() < players[currentPlayerNumber].getCard(choiseCard).getValue()) {
+                playerScore[currentPlayerNumber]++;
+            } else {
+                playerScore[currentPlayerNumber]--;
+            }
+            lastCard = null;
+        } else {
+            lastCard = players[currentPlayerNumber].getCard(choiseCard);
+        }
         return false;
     }
 
+    private void shuffleDeck()
+    {
+        Random rnd = new Random();
+        Card[] temp = new Card[36];
+        for(int i=0;i<36;i++)
+        {
+            temp[i] = deck[rnd.nextInt(36)];
+        }
+        deck=temp;
+    }
     @Override
-    public void dealCards() {
+    public void dealCards() throws CardException {
+        shuffleDeck();
         for(int i = 0; i < 6; i++) {
             for (Player p : players) {
                 if (p != null) {
@@ -57,15 +90,13 @@ public class GameService implements Game {
     }
 
     @Override
-    public Card getNextCard() {
-        if(size != 0) {
-            Card card = deck[size - 1];
-            deck[size - 1] = null;
-            size--;
-            return card;
-        } else {
-            return null;
-        }
+    public Card getNextCard() throws CardException {
+        if (size == 0) throw new EmptyDeckException();
+        Card card = deck[size - 1];
+        if (card == null) throw new NoCardFoundException();
+        deck[size - 1] = null;
+        size--;
+        return card;
     }
 
     @Override
@@ -81,7 +112,8 @@ public class GameService implements Game {
 
     @Override
     public void setPlayer(Player player1, int palyerIndex) {
-        players[palyerIndex] = player1;
+        if(players[palyerIndex]==null)
+            players[palyerIndex] = player1;
     }
 
     @Override

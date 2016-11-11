@@ -1,14 +1,15 @@
 package Lesson6Game;
 
 import Lesson6Game.model.Card;
-import Lesson6Game.model.Game;
+import Lesson6Game.model.NoCardFoundException;
 import Lesson6Game.model.Player;
+import Lesson6Game.model.Game;
 import Lesson6Game.model.impl.GameService;
 import Lesson6Game.model.impl.PlayerImpl;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 	    Card[] allCards = new Card[36];
         int index = 0;
         for(Card.SubType subType : Card.SubType.values()) {
@@ -26,22 +27,23 @@ public class Main {
         }
 
         Game game = new GameService();
-        Player player1 = new PlayerImpl("p1");
-        Player player2 = new PlayerImpl("p2");;
+        Player player1 = (Player) new PlayerImpl("p1");
+        Player player2 = (Player) new PlayerImpl("p2");;
 
         game.setDeck(allCards);
         game.setPlayer(player1, 0);
         game.setPlayer(player2, 1);
 
         game.dealCards();
-
-        while(game.hasNextCard()) {
+        boolean rs = game.hasNextCard();
+        while(rs) {
             Player currentPlayer = game.getNextPlayer();
             Card card = currentPlayer.getRandomCard();
-            if(card == null) break;
+            if(card == null) throw new NoCardFoundException();
             System.out.println("Player " + currentPlayer + " is playing card " + card);
             game.currentPlayerPlaysCard(card);
             currentPlayer.addCard(game.getNextCard());
+            rs = game.hasNextCard() || currentPlayer.hasCardsInHand();
         }
 
         System.out.println(player1 + " has score " + game.getPlayersScore(player1));

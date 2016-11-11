@@ -28,7 +28,7 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public String getNAme() {
+    public String getName() {
         return this.name;
     }
 
@@ -57,8 +57,8 @@ public class PlayerImpl implements Player {
     }
 
     @Override
-    public int getHandSize() {
-        return this.size;
+    public boolean hasCardsInHand() {
+        return size>0;
     }
 
     @Override
