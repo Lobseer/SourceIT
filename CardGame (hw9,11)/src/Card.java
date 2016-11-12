@@ -1,3 +1,4 @@
+import exept.CardInvalidValueException;
 import impl.ICard;
 
 /**
@@ -5,23 +6,19 @@ import impl.ICard;
  */
 public class Card implements ICard {
     private SubType subType;
-    private int value;
+    private CardValue cardValue;
 
 
-    public Card(SubType subType, int value) {
+    public Card(SubType subType, CardValue cardValue) {
+        if(cardValue.value<0) throw new CardInvalidValueException();
         this.subType = subType;
-        this.value = value;
-
+        this.cardValue = cardValue;
+        CardValue c = CardValue.ACE;
     }
 
     @Override
-    public Type getType() {
-        return value>5?Type.UNCOMMON:Type.COMMON;
-    }
-
-    @Override
-    public int getValue() {
-        return value;
+    public CardValue getValue() {
+        return cardValue;
     }
 
     @Override
@@ -32,6 +29,6 @@ public class Card implements ICard {
     @Override
     public String toString() {
         //"SubType: "+subType+", value: "+value;
-        return String.format("SubType: %1s, value: %2s\n",subType,value);
+        return String.format("SubType: %1s, value: %2s\n",subType,cardValue);
     }
 }

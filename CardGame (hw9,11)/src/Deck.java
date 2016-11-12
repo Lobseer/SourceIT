@@ -1,6 +1,4 @@
-import exept.DeckInvalidSizeExeption;
-import exept.DeckIsEmptyException;
-import exept.DeckIsFullExeption;
+import exept.*;
 import impl.ICard;
 import impl.ICardDeck;
 
@@ -12,68 +10,167 @@ import java.util.*;
 public class Deck implements ICardDeck {
     private ICard[] cards;
     private int maxSize;
-    private int total;
+    private int topCardIndex;
 
 
-    public Deck(int maxSize) throws DeckInvalidSizeExeption {
-        if(maxSize>0) {
-            this.maxSize = maxSize;
-            total=-1;
-            cards = new ICard[maxSize];
-        }
-        else {
-            throw new DeckInvalidSizeExeption();//"Deck size can't be less then one"
-        }
+    public Deck(int maxSize) {
+        if(maxSize<0) throw new DeckInvalidSizeExeption();//"Deck size can't be less then one"
+
+        this.maxSize = maxSize;
+        topCardIndex =-1;
+        cards = new ICard[maxSize];
+    }
+
+    public ICard cardSwap(int index, ICard card) {
+        ICard returnCard = cards[index];
+        cards[index]=card;
+        return returnCard;
     }
 
     @Override
     public void shuffleDeck() {
         Random rnd = new Random();
         ICard[] temp = new Card[maxSize];
-        ArrayList<Integer> a = new ArrayList();
+        ArrayList<Integer> nums = new ArrayList();
 
-        for(int i=0;i<maxSize;i++) {
-            a.add(i);
-        }
+        for(int i=0;i<maxSize;i++) nums.add(i);
+
         int irand;
-        int gg;
         for(int i=0;i<maxSize;i++) {
             irand=rnd.nextInt(maxSize-i);
-            gg=a.get(irand);
-            temp[i]=cards[gg];
-            a.remove(irand);
+            temp[i]=cards[nums.get(irand)];
+            nums.remove(irand);
         }
         cards=temp;
     }
 
     @Override
-    public ICard pop() throws DeckIsEmptyException{
+    public ICard getFirstCard() {
         if(isEmpty()) throw new DeckIsEmptyException();
-        ICard temp = cards[total];
-        cards[total] = null;
-        total--;
+        ICard temp = cards[topCardIndex];
+        cards[topCardIndex] = null;
+        topCardIndex--;
         return temp;
     }
 
+    public Card peekLastCard() {
+        if(isEmpty()) throw new DeckIsEmptyException();
+        return (Card)cards[0];
+    }
+
     @Override
-    public void push(ICard card) throws DeckIsFullExeption {
-        if(++total<maxSize) {
-            cards[total]=card;
+    public ICard getCard(int index){
+        if(isEmpty()) throw new DeckIsEmptyException();
+        if(cards[index]==null) throw new CardNotFoundException();
+        ICard cardToReturn = cards[index];
+        cards[index] = cards[topCardIndex];
+        cards[topCardIndex] = null;
+        topCardIndex--;
+        return cardToReturn;
+    }
+
+    @Override
+    public ICard getCard(ICard.SubType type, ICard.CardValue cardValue) {
+        if(isEmpty()) throw new DeckIsEmptyException();
+        ICard cardToReturn;
+        for (int i=0;i<topCardIndex;i++) {
+            if (cards[i].getSubType() == type && cards[i].getValue() == cardValue) {
+                cardToReturn = cards[i];
+                cards[i] = cards[topCardIndex];
+                cards[topCardIndex] = null;
+                topCardIndex--;
+                return cardToReturn;
+            }
         }
-        else {
-            throw new DeckIsFullExeption();
+        throw new CardNotFoundException();
+    }
+
+    public int getHighestCardIndex(ICard.SubType type) {
+        if(isEmpty()) throw new DeckIsEmptyException();
+        int highCard = -1;
+        int result=-1;
+        for (int i=0;i<topCardIndex;i++) {
+            if(highCard < cards[i].getValue().value) {
+                highCard=cards[i].getValue().value;
+                result=i;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public ICard getRandomCard() {
+        return getCard((new Random()).nextInt(topCardIndex+1));
+    }
+
+    @Override
+    public ICard getRandomCard(ICard.SubType type) {
+        Deck deck = (Deck)getSubDeck(type);
+        if(deck==null) return null;
+        ICard temp = deck.getRandomCard();
+        return getCard(temp.getSubType(),temp.getValue());
+    }
+
+    @Override
+    public ICardDeck getSubDeck(ICard.SubType type)  {
+        Deck returnDeck = new Deck(maxSize);
+        for (ICard card : cards) {
+            if(card.getSubType()==type)
+                returnDeck.addCard(card);
+        }
+        if(returnDeck.topCardIndex<0) return null;
+        return returnDeck;
+    }
+
+    @Override
+    public ICardDeck getSubDeck(ICard.CardValue cardValue)  {
+        Deck returnDeck = new Deck(topCardIndex);
+        for (ICard card : cards) {
+            if(card.getValue()==cardValue) returnDeck.addCard(card);
+        }
+        if(returnDeck.topCardIndex<0) return null;
+        return returnDeck;
+    }
+
+    @Override
+    public void addCard(ICard card) {
+        if(isFull()) throw new DeckIsFullException(" In Card add! ");
+        cards[++topCardIndex]=card;
+    }
+    @Override
+    public void addCards(ICard[] cards) {
+        for(ICard card : cards) {
+            if (isFull()) throw new DeckIsFullException(" In Cards add! ");
+            this.cards[++topCardIndex] = card;
+        }
+    }
+    @Override
+    public void addCards(ICardDeck deck) {
+        while (!deck.isEmpty()){
+            if (isFull()) throw new DeckIsFullException(" In Cards add! ");
+            this.cards[++topCardIndex] = deck.getFirstCard();
+        }
+    }
+
+    @Override
+    public void clear() {
+        while(!isEmpty()) {
+            getFirstCard();
         }
     }
 
     @Override
     public int total() {
-        return total;
+        return topCardIndex +1;
     }
 
     @Override
     public boolean isEmpty() {
-        return total==0;
+        return topCardIndex < 0;
     }
+
+    @Override
+    public boolean isFull() { return topCardIndex+1 == maxSize;}
 
     @Override
     public String toString() {
