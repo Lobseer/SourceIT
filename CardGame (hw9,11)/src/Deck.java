@@ -22,10 +22,14 @@ public class Deck implements ICardDeck {
     }
 
     public ICard cardSwap(int index, ICard card) {
+        if(index<0 || index>topCardIndex || cards[index]==null) throw new CardNotFoundException();
+        if(card==null) throw new NullPointerException();
         ICard returnCard = cards[index];
         cards[index]=card;
         return returnCard;
     }
+
+
 
     @Override
     public void shuffleDeck() {
@@ -61,7 +65,7 @@ public class Deck implements ICardDeck {
     @Override
     public ICard getCard(int index){
         if(isEmpty()) throw new DeckIsEmptyException();
-        if(cards[index]==null) throw new CardNotFoundException();
+        if(index<0 || index>topCardIndex || cards[index]==null) throw new CardNotFoundException();
         ICard cardToReturn = cards[index];
         cards[index] = cards[topCardIndex];
         cards[topCardIndex] = null;
@@ -82,7 +86,7 @@ public class Deck implements ICardDeck {
                 return cardToReturn;
             }
         }
-        throw new CardNotFoundException();
+        return null;
     }
 
     public int getHighestCardIndex(ICard.SubType type) {
@@ -90,9 +94,11 @@ public class Deck implements ICardDeck {
         int highCard = -1;
         int result=-1;
         for (int i=0;i<topCardIndex;i++) {
-            if(highCard < cards[i].getValue().value) {
-                highCard=cards[i].getValue().value;
-                result=i;
+            if(cards[i].getSubType()==type) {
+                if (highCard < cards[i].getValue().value) {
+                    highCard = cards[i].getValue().value;
+                    result = i;
+                }
             }
         }
         return result;
@@ -100,36 +106,48 @@ public class Deck implements ICardDeck {
 
     @Override
     public ICard getRandomCard() {
-        return getCard((new Random()).nextInt(topCardIndex+1));
+        Random rnd = new Random();
+        int temp = rnd.nextInt(topCardIndex+1);
+        ICard card = getCard(temp);
+        return card;
+        //return getCard((new Random()).nextInt(topCardIndex+1));
     }
 
     @Override
     public ICard getRandomCard(ICard.SubType type) {
-        Deck deck = (Deck)getSubDeck(type);
+        Deck deck = (Deck) peekSubDeck(type);
         if(deck==null) return null;
         ICard temp = deck.getRandomCard();
         return getCard(temp.getSubType(),temp.getValue());
     }
 
     @Override
-    public ICardDeck getSubDeck(ICard.SubType type)  {
+    public ICardDeck peekSubDeck(ICard.SubType type)  {
+        if(isEmpty()) throw new DeckIsEmptyException();
         Deck returnDeck = new Deck(maxSize);
         for (ICard card : cards) {
-            if(card.getSubType()==type)
-                returnDeck.addCard(card);
+            if(card.getSubType()==type) returnDeck.addCard(card);
         }
         if(returnDeck.topCardIndex<0) return null;
         return returnDeck;
     }
 
     @Override
-    public ICardDeck getSubDeck(ICard.CardValue cardValue)  {
+    public ICardDeck peekSubDeck(ICard.CardValue cardValue)  {
+        if(isEmpty()) throw new DeckIsEmptyException();
         Deck returnDeck = new Deck(topCardIndex);
         for (ICard card : cards) {
             if(card.getValue()==cardValue) returnDeck.addCard(card);
         }
         if(returnDeck.topCardIndex<0) return null;
         return returnDeck;
+    }
+
+    public void insertCard(int index, ICard card) {
+        if(index<0 || index>=maxSize) throw new IndexOutOfBoundsException();
+        if(card==null) throw new NullPointerException();
+        cards[index]=card;
+        topCardIndex++;
     }
 
     @Override

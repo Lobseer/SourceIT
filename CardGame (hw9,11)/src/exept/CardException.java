@@ -6,7 +6,7 @@ package exept;
 public class CardException extends RuntimeException {
     @Override
     public String getMessage() {
-        return super.getMessage()+"Invalid card manipulate: ";
+        return "Invalid card manipulate: ";
     }
     public CardException() {
         super();

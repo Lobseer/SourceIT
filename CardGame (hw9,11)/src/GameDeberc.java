@@ -3,7 +3,6 @@ import impl.ICard;
 import impl.ICardDeck;
 import impl.ICardGame;
 import impl.IPlayer;
-import sun.management.counter.perf.PerfLongArrayCounter;
 
 /**
  * Class description
@@ -40,6 +39,13 @@ public class GameDeberc implements ICardGame{
 
 
     private int currentPlayerNumber;
+    public int getCurrentPlayerNumber() {
+        return currentPlayerNumber;
+    }
+    public void setCurrentPlayerNumber(int number) {
+        if(number<0 && number>=players.length) throw new IndexOutOfBoundsException();
+        currentPlayerNumber=number-1;
+    }
 
     private ICard.SubType trump;
     public ICard.SubType getTrump() {
@@ -156,13 +162,11 @@ public class GameDeberc implements ICardGame{
         return null;
     }
 
-    boolean playCard(Card card) {
-        if(table.isFull()) {
-            return false;
-        } else {
-            table.addCard(card);
-            return true;
-        }
+    boolean playCard(int playerId, Card card) {
+        if(table.isFull()) return false;
+        table.insertCard(playerId, card);
+        if(table.isFull()) return false;
+        return true;
     }
 
     /**
@@ -171,13 +175,14 @@ public class GameDeberc implements ICardGame{
      */
     public int tableCardEquals() {
         int winnerIndex;
-        if(table.getSubDeck(trump)==null) {
+        if(table.peekSubDeck(trump)==null) {
             winnerIndex = table.getHighestCardIndex(table.peekLastCard().getSubType());
         }
         else {
-            winnerIndex = ((Deck)table.getSubDeck(trump)).getHighestCardIndex(trump);
+            winnerIndex = ((Deck)table.peekSubDeck(trump)).getHighestCardIndex(trump);
         }
         playersBanks[winnerIndex].addCards(table);
+        //table.clear();
         return winnerIndex;
     }
 
@@ -241,7 +246,6 @@ public class GameDeberc implements ICardGame{
             }
         }
     }
-
     @Override
     public void dealAllCards() throws CardException {
         for(int i=0;i<ICardGame.STANDART_HAND_SIZE;i++) {

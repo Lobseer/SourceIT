@@ -1,5 +1,6 @@
 import exept.*;
 import impl.ICard;
+import impl.ICardDeck;
 
 /**
  * Class description
@@ -16,7 +17,7 @@ public class Main {
             //game.addPlayer(new Player("3.Grisha",GameDeberc.STANDART_HAND_SIZE));
 
 
-            int winnerIndex;
+            int winnerIndex=0;
             int bestScore=0;
             Card playedCard;
             Player currentPlayer;
@@ -27,11 +28,12 @@ public class Main {
                 System.out.println("Combo state:\n");
 
                 System.out.println("Play state:\n");
-                for(int step=1;!game.getDeck().isEmpty();step++) {
+                for(int step = 1; step<(ICardDeck.STANDART_DECK-4)/MAX_PLAYER; step++) {
                     System.out.println("Step "+step+"\n");
+                    game.setCurrentPlayerNumber(winnerIndex);
                     currentPlayer = game.getNextPlayer();
                     playedCard = (Card) currentPlayer.playRandomCard();
-                    while (game.playCard(playedCard)) {
+                    while (game.playCard(game.getCurrentPlayerNumber(), playedCard)) {
                         currentPlayer = game.getNextPlayer();
                         playedCard = (Card) currentPlayer.playRandomCard(playedCard.getSubType());
                         if (playedCard == null) {
@@ -41,11 +43,11 @@ public class Main {
                             playedCard = (Card) currentPlayer.playRandomCard();
                         }
                     }
-                    System.out.println(game.getTable());
+
+                    System.out.println("End of the step:\nOn table:\n"+game.getTable()+"\nTrump is:"+game.getTrump());
                     winnerIndex = game.tableCardEquals();
                     System.out.println("Player №" + winnerIndex + " is winner!\nHis bank:\n" + game.getPlayerBank(winnerIndex));
-                    game.getTable().clear();
-                    game.takeCards();
+                    if(!game.getDeck().isEmpty()) game.takeCards();
                 }
 
                 System.out.println("Score count state:\n");

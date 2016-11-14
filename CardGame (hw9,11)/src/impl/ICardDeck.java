@@ -12,8 +12,8 @@ public interface ICardDeck {
     ICard getCard(ICard.SubType type, ICard.CardValue cardValue);
     ICard getRandomCard() throws CardNotFoundException, DeckIsEmptyException;
     ICard getRandomCard(ICard.SubType type) throws CardNotFoundException, DeckExeption;
-    ICardDeck getSubDeck(ICard.SubType type) throws CardNotFoundException, DeckExeption;
-    ICardDeck getSubDeck(ICard.CardValue cardValue) throws CardNotFoundException, DeckExeption;
+    ICardDeck peekSubDeck(ICard.SubType type) throws CardNotFoundException, DeckExeption;
+    ICardDeck peekSubDeck(ICard.CardValue cardValue) throws CardNotFoundException, DeckExeption;
     void addCard(ICard card) throws DeckIsFullException;
     void addCards(ICard[] cards) throws DeckIsFullException;
     void addCards(ICardDeck deck) throws DeckIsFullException;

@@ -6,7 +6,7 @@ package exept;
 public class DeckExeption extends RuntimeException {
     @Override
     public String getMessage() {
-        return super.getMessage()+" Invalid deck manipulate: ";
+        return " Invalid deck manipulate: ";
     }
     public DeckExeption() {
         super();
