@@ -1,6 +1,6 @@
 import exept.*;
 import impl.ICard;
-import impl.ICardDeck;
+import impl.IDeck;
 import impl.ICardGame;
 import impl.IPlayer;
 
@@ -13,26 +13,27 @@ public class GameDeberc implements ICardGame{
 
     private Deck mainDeck;
     @Override
-    public void setDeck(ICardDeck deck) {
+    public void setDeck(IDeck deck) {
         mainDeck = (Deck)deck;
     }
     @Override
-    public ICardDeck getDeck() {
+    public Deck getDeck() {
         return mainDeck;
     }
 
-    private int playersNum;
+    private int playersCount;
 
     private Player[] players;
 
     private Deck[] playersBanks;
     public Deck getPlayerBank(int index) {
-        if(index<0 || index>=playersNum) throw new DeckExeption();
+        if(index<0 || index>= playersCount) throw new DeckExeption();
         return playersBanks[index];
     }
 
 
     private Deck table;
+    @Override
     public Deck getTable() {
         return table;
     }
@@ -48,6 +49,7 @@ public class GameDeberc implements ICardGame{
     }
 
     private ICard.SubType trump;
+    @Override
     public ICard.SubType getTrump() {
         return trump;
     }
@@ -84,7 +86,7 @@ public class GameDeberc implements ICardGame{
      * @param maxPlayers - number of players
      */
     public GameDeberc(int maxPlayers) {
-        playersNum=0;
+        playersCount =0;
         setDeck(createDebercDeck());
         players = new Player[maxPlayers];
         playersBanks = new Deck[maxPlayers];
@@ -111,7 +113,7 @@ public class GameDeberc implements ICardGame{
             if (players[i] == null) {
                 players[i]=(Player)player;
                 playersBanks[i]=new Deck(mainDeck.total());
-                playersNum++;
+                playersCount++;
                 return;
             }
         }
@@ -123,13 +125,16 @@ public class GameDeberc implements ICardGame{
      */
     void newGame() {
         currentPlayerNumber=-1;
+        setDeck(createDebercDeck());
+        for(Deck d : playersBanks)
+            if(d!=null) d.clear();
         mainDeck.shuffleDeck();
         bottomTrumpCard=mainDeck.peekLastCard();
         trump=bottomTrumpCard.getSubType();
         dealAllCards();
     }
 
-    Deck createDebercDeck() {
+    private Deck createDebercDeck() {
         Deck result = new Deck(32);
         for(Card.SubType type : Card.SubType.values()) {
             for(Card.CardValue val : Card.CardValue.values()) {
@@ -162,11 +167,10 @@ public class GameDeberc implements ICardGame{
         return null;
     }
 
-    boolean playCard(int playerId, Card card) {
-        if(table.isFull()) return false;
+    @Override
+    public boolean playCard(int playerId, ICard card) {
         table.insertCard(playerId, card);
-        if(table.isFull()) return false;
-        return true;
+        return table.total()<=playersCount;
     }
 
     /**
@@ -186,7 +190,7 @@ public class GameDeberc implements ICardGame{
         return winnerIndex;
     }
 
-    public int bankScoreCount(int index) {
+    private int bankScoreCount(int index) {
         int result=0;
         Card temp;
         while(!playersBanks[index].isEmpty()) {
@@ -223,11 +227,12 @@ public class GameDeberc implements ICardGame{
         return result;
     }
 
+    @Override
     public int whoIsWin() {
         int winnerIndex=currentPlayerNumber=-1;
         int tempScore;
         int maxScore=-1;
-        for(int i = 0;i<playersNum;i++) {
+        for(int i = 0; i< playersCount; i++) {
             getNextPlayer();
             tempScore=bankScoreCount(currentPlayerNumber);
             if(maxScore<tempScore) {
@@ -235,12 +240,13 @@ public class GameDeberc implements ICardGame{
                 winnerIndex=currentPlayerNumber;
             }
         }
+        players[winnerIndex].addScore(maxScore);
         return winnerIndex;
     }
 
-    @Override
     public void takeCards() {
-        for(int i=0;i<playersNum;i++) {
+        currentPlayerNumber=-1;
+        for(int i = 0; i< playersCount; i++) {
             if(!mainDeck.isEmpty()) {
                 getNextPlayer().takeCard(mainDeck.getFirstCard());
             }
@@ -255,15 +261,16 @@ public class GameDeberc implements ICardGame{
 
     @Override
     public Player getNextPlayer() {
-        if(playersNum==0) throw new PlayerDontFoundException();
-        for(int i = 0; i<players.length;i++) {
-            if ((currentPlayerNumber + 1) == players.length) {
+        if(playersCount ==0) throw new PlayerDontFoundException();
+        for ( int i = 0; i<=players.length; i++) {
+            if (currentPlayerNumber == players.length-1) {
                 currentPlayerNumber = -1;
             }
-            if (players[currentPlayerNumber + 1] == null) {
+            if (players[currentPlayerNumber+1] == null) {
                 currentPlayerNumber++;
+            } else {
+                return players[++currentPlayerNumber];
             }
-            else return players[++currentPlayerNumber];
         }
         return null;
     }
@@ -275,9 +282,9 @@ public class GameDeberc implements ICardGame{
 
     @Override
     public String toString() {
-        String result = String.format("Game view:\nDeck:\n %1s\n\n || TrumpCard: %2s\n Players: \n",mainDeck,bottomTrumpCard);
-        for(Player p : players) {
-            result+= p + "\n";
+        String result = String.format("Game view:\nDeck:\n%1s\n|TrumpCard: %2s|\n\nPlayers:\n",mainDeck,bottomTrumpCard);
+        for(int i = 0; i < playersCount; i++) {
+            result+= getNextPlayer() + "\n";
         }
         result += "End.\n";
         return result;

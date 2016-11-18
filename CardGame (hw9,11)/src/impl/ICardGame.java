@@ -1,24 +1,19 @@
 package impl;
 
-import exept.*;
-
 /**
  * Created by lobseer on 11.11.2016.
  */
 public interface ICardGame {
-    void setDeck(ICardDeck deck);
-    ICardDeck getDeck();
+    void setDeck(IDeck deck);
+    IDeck getDeck();
+    IDeck getTable();
     void addPlayer(IPlayer player);
     IPlayer getNextPlayer();
-    void takeCards();
-    //ICard getNextCard() throws CardException;
-    //boolean currentPlayerPlaysCard(ICard ICard);
-    //boolean currentPlayerPlaysCard(int cardNumberInThePalyersHand);
-    //boolean currentPlayerPlaysRandomCard();
+    int whoIsWin();
+    boolean playCard(int playerId, ICard card);
+    ICard.SubType getTrump();
     int getPlayerScore(int palyerNumber);
-    //int getPlayerScore(IPlayer IPlayer);
-    void dealAllCards() throws CardException;
-    //boolean hasNextCard();
+    void dealAllCards();
 
     int STANDART_HAND_SIZE = 6;
 }

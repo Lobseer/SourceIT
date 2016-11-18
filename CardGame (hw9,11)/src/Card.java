@@ -29,6 +29,6 @@ public class Card implements ICard {
     @Override
     public String toString() {
         //"SubType: "+subType+", value: "+value;
-        return String.format("SubType: %1s, value: %2s\n",subType,cardValue);
+        return String.format("SubType: %1s, value: %2s",subType,cardValue);
     }
 }

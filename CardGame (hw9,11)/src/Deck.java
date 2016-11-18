@@ -1,13 +1,13 @@
 import exept.*;
 import impl.ICard;
-import impl.ICardDeck;
+import impl.IDeck;
 
 import java.util.*;
 
 /**
  * Created by lobseer on 11.11.2016.
  */
-public class Deck implements ICardDeck {
+public class Deck implements IDeck {
     private ICard[] cards;
     private int maxSize;
     private int topCardIndex;
@@ -28,8 +28,6 @@ public class Deck implements ICardDeck {
         cards[index]=card;
         return returnCard;
     }
-
-
 
     @Override
     public void shuffleDeck() {
@@ -89,14 +87,31 @@ public class Deck implements ICardDeck {
         return null;
     }
 
+    @Override
     public int getHighestCardIndex(ICard.SubType type) {
         if(isEmpty()) throw new DeckIsEmptyException();
         int highCard = -1;
         int result=-1;
-        for (int i=0;i<topCardIndex;i++) {
+        for (int i=0;i<=topCardIndex;i++) {
             if(cards[i].getSubType()==type) {
                 if (highCard < cards[i].getValue().value) {
                     highCard = cards[i].getValue().value;
+                    result = i;
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int getLeastCardIndex(ICard.SubType type) {
+        if(isEmpty()) throw new DeckIsEmptyException();
+        int lowCard = 16;
+        int result=-1;
+        for (int i=0;i<=topCardIndex;i++) {
+            if(cards[i].getSubType()==type) {
+                if (lowCard > cards[i].getValue().value) {
+                    lowCard = cards[i].getValue().value;
                     result = i;
                 }
             }
@@ -122,18 +137,22 @@ public class Deck implements ICardDeck {
     }
 
     @Override
-    public ICardDeck peekSubDeck(ICard.SubType type)  {
+    public IDeck peekSubDeck(ICard.SubType type)  {
         if(isEmpty()) throw new DeckIsEmptyException();
         Deck returnDeck = new Deck(maxSize);
-        for (ICard card : cards) {
-            if(card.getSubType()==type) returnDeck.addCard(card);
+        for (int i=0; i<=topCardIndex; i++)
+        {
+            if(cards[i].getSubType()==type) returnDeck.addCard(cards[i]);
         }
+        //for (ICard card : cards) {
+        //    if(card!=null && card.getSubType()==type) returnDeck.addCard(card);
+        //}
         if(returnDeck.topCardIndex<0) return null;
         return returnDeck;
     }
 
     @Override
-    public ICardDeck peekSubDeck(ICard.CardValue cardValue)  {
+    public IDeck peekSubDeck(ICard.CardValue cardValue)  {
         if(isEmpty()) throw new DeckIsEmptyException();
         Deck returnDeck = new Deck(topCardIndex);
         for (ICard card : cards) {
@@ -163,7 +182,7 @@ public class Deck implements ICardDeck {
         }
     }
     @Override
-    public void addCards(ICardDeck deck) {
+    public void addCards(IDeck deck) {
         while (!deck.isEmpty()){
             if (isFull()) throw new DeckIsFullException(" In Cards add! ");
             this.cards[++topCardIndex] = deck.getFirstCard();
@@ -192,6 +211,13 @@ public class Deck implements ICardDeck {
 
     @Override
     public String toString() {
-        return Arrays.toString(cards);
+        String result = "[\n";
+        for (ICard card : cards){
+            if(card!=null)
+                result+=card.toString()+'\n';
+        }
+        result+="]";
+        return result;
+        //return Arrays.toString(cards);
     }
 }

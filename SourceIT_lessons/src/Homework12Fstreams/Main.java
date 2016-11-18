@@ -13,6 +13,6 @@ public class Main {
         OutputStream os = new BufferedOutputStream(new FileOutputStream("SourceIT_lessons/src/Homework12Fstreams/test.txt"));
         File file = new File("SourceIT_lessons/src/Homework12Fstreams/test.txt");
         file.createNewFile();
-        os.
+
     }
 }
