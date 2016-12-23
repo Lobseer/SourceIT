@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <staff id="1">
+        <firstName>
+            Вася
+        </firstName>
+        <lastName>
+            Пупкин
+        </lastName>
+        <nikName>
+            Grobat
+        </nikName>
+        <salary isRegular="true">
+            3000
+        </salary>
+    </staff>
+</root>
