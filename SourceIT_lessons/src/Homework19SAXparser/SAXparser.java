@@ -58,6 +58,12 @@ public class SAXparser {
             if (qName.equalsIgnoreCase("login")) {
                 person.setLogin(sb.toString().trim());
             }
+            if (qName.equalsIgnoreCase("document")) {
+                person.setDocumentName(sb.toString().trim());
+            }
+            if (qName.equalsIgnoreCase("pages")) {
+                person.setPages(Integer.parseInt(sb.toString().trim()));
+            }
             if (qName.equalsIgnoreCase("doc")) {
                 docs.add(sb.toString().trim());
             }
