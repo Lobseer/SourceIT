@@ -1,4 +1,4 @@
-package Lesson17MultyStreams;
+package Lesson17multithreading;
 
 import java.util.HashMap;
 import java.util.Map;

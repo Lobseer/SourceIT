@@ -1,7 +1,4 @@
-package Lesson17MultyStreams;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+package Lesson17multithreading;
 
 /**
  * Class description

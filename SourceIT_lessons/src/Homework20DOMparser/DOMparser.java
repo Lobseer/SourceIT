@@ -31,7 +31,7 @@ public class DOMparser {
         Document document = builder.parse(path);
         Element rootElement = document.getDocumentElement();
         //NodeList nodeList = document.getDocumentElement().getChildNodes();
-        
+
         person.setId(Integer.parseInt(rootElement.getAttribute("id")));
 
         for(Node node = rootElement.getFirstChild(); node != null; node = node.getNextSibling())

@@ -1,4 +1,4 @@
-package Lesson11_throws;
+package Lesson11Exceptions;
 
 import java.io.IOException;
 import java.net.SocketException;

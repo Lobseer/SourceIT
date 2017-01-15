@@ -1,4 +1,8 @@
-package Homework17;
+package Homework17multithreading;
+
+import java.util.Random;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Class description
@@ -34,45 +38,41 @@ public class Child implements Runnable{
         if(money>0) this.money = money;
     }
 
-    private IceCreamShop shop;
+    private Shop shop;
 
     public Child() {
         this.name = "Child";
     }
 
-    public Child(String name, float money, final IceCream favoriteIceCream) {
+    public Child(String name, float money, IceCream favoriteIceCream, Shop iceCreamShop) {
         this.name = name;
         this.money = money;
 
         this.favoriteIceCream = favoriteIceCream;
+
+        shop = iceCreamShop;
     }
 
-    public void eatIcecream()
+    public void eatIceCream()
     {
         this.iceCream = null;
+        System.out.printf("%1s eat ice cream\n", name);
     }
 
-    public boolean buyIcecream(IceCream iceCream)
-    {
-        if (money< iceCream.getCost()) return false;
-        this.iceCream = iceCream;
-        money-= iceCream.getCost();
-        return true;
-    }
-
-    /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
     @Override
     public void run() {
-
+        try {
+            Random rnd = new Random();
+            while(money>=favoriteIceCream.getCost()) {
+                if(iceCream==null) {
+                    iceCream = shop.createIceCream(this);
+                    sleep((rnd.nextInt(9)+1)*1000);
+                    eatIceCream();
+                }
+            }
+        }
+        catch (InterruptedException ex) {
+            System.out.println("Exception in child: "+ex.getMessage());
+        }
     }
 }

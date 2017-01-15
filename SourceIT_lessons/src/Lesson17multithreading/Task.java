@@ -1,4 +1,4 @@
-package Lesson17MultyStreams;
+package Lesson17multithreading;
 
 /**
  * Class description

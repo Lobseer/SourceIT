@@ -1,4 +1,4 @@
-package Homework17;
+package Homework17multithreading;
 
 /**
  * Class description
@@ -7,7 +7,7 @@ package Homework17;
  * @version 02.12.2016
  */
 
-public class IceCream{
+public class IceCream implements Cloneable{
     private String name;
     private String taste;
     private String smell;
@@ -51,5 +51,21 @@ public class IceCream{
         this.smell = smell;
         this.color = color;
         this.cost = cost;
+    }
+
+    @Override
+    public IceCream clone() {
+        return new IceCream(taste, smell, color, cost);
+    }
+
+    @Override
+    public String toString() {
+        return "IceCream{" +
+                "name='" + name + '\'' +
+                ", taste='" + taste + '\'' +
+                ", smell='" + smell + '\'' +
+                ", color='" + color + '\'' +
+                ", cost=" + cost +
+                '}';
     }
 }
