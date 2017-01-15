@@ -18,8 +18,6 @@ public class Main {
         String connectionString = "jdbc:mysql://localhost:3306/source_it";
         Class.forName(jdbcDriverName);
 
-
-
         Map<Integer, Student> students;
         Map<Integer, School> schools;
         Map<Integer, Group> groups;
@@ -119,6 +117,7 @@ public class Main {
         return null;
     }
 
+
     static void safeSelectingFromId(Connection conn, int id) {
         Student student;
         String query = "select * from source_it.student" +
@@ -159,5 +158,4 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
-
 }
