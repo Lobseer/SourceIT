@@ -1,10 +1,5 @@
 package Homework17multithreading;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
 import static java.lang.Thread.sleep;
 
 /**

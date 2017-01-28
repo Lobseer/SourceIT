@@ -6,7 +6,7 @@
     <login>myLogin</login>
     <permission>
         <document>RW</document>
-        <pages>R</pages>
+        <pages>13</pages>
     </permission>
     <documents>
         <doc><![CDATA[ 1.txt < 0\ >]111 <node> gg </> ]]></doc>
